@@ -1,0 +1,49 @@
+/*Find the most popular Hacker News stories*/
+SELECT title, score
+FROM hacker_news
+ORDER BY score DESC
+LIMIT 10;
+
+
+/*Is it true that Hacker News is dominated by a small percentage of their users (1-9-90 rule)?*/
+SELECT SUM(score)
+FROM hacker_news; --total score is 6366
+
+SELECT SUM(score)
+FROM hacker_news
+GROUP BY user
+HAVING SUM(score) > 200; --select users with scores greater than 200
+
+SELECT (517 + 309 + 304 + 282)*100 / 6366.0; -- equals 22%. Thus, 4 users have a combined 22% of the total scores in the table.
+
+/*Check how many times have some users 'rickrolled' other users
+URL to Rick Astley's video: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+*/
+SELECT user, COUNT(*)
+FROM hacker_news
+WHERE url LIKE '%watch?v=dQw4w9WgXcQ%'
+GROUP BY user
+ORDER BY COUNT(*) DESC;
+-- users sonnynomnom and scorpionsister have being very nasty
+
+/*Which of these sites feed Hacker News the most:
+GitHub, Medium, or New York Times?*/
+SELECT CASE 
+WHEN url LIKE '%github.com%' THEN 'GitHub'
+WHEN url LIKE '%medium.com%' THEN 'Medium'
+WHEN url LIKE '%nytimes.com%' THEN 'New York Times'
+ELSE 'Other'
+END AS 'Source',
+COUNT(*)
+FROM hacker_news
+GROUP BY 1; -- GitHub: 23, Medium: 12, New York Times:13, Other:3952
+
+/*What’s the best time of the day to post a story on Hacker News?*/
+SELECT strftime('%H', timestamp) AS 'Hour', 
+ROUND(AVG(score), 1) AS 'Average Score', 
+COUNT(*) AS 'Number of Stories'
+FROM hacker_news
+WHERE timestamp is not NULL
+GROUP BY 1
+ORDER BY 1
+LIMIT 20; -- best time to post is 7:00 or 18-19:00

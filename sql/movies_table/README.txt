@@ -1,0 +1,1 @@
+In this off-platform project, I will work on creating a movies database using PostgreSQL on my own computer.
