@@ -4,3 +4,4 @@ In this repository I gather finished projects performed during Codecademy.com co
 
 ### Current topics:
 - SQL
+- Feature Engineering
